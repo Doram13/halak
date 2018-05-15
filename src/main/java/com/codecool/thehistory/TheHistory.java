@@ -89,20 +89,31 @@ public class TheHistory {
         }
     }
 
-    private boolean findNextMatch(ListIterator<String> wordIterator, String[] fromWords) {
+    private int findNextMatch(List<String> wordsList, ListIterator<String> startIterator, String[] fromWords) {
         boolean matchFound = false;
-        while(!matchFound && wordIterator.hasNext()) {
-            if (wordIterator.next().contentEquals(fromWords[0])) {
+        int nextElemIndex = 0;
+
+        while(!matchFound && startIterator.hasNext()) {
+            if (startIterator.next().contentEquals(fromWords[0])) {
+                nextElemIndex = startIterator.nextIndex();
+                matchFound = true;
                 for (int j = 1; j < fromWords.length; ++j) {
-                    if(!wordIterator.hasNext()) break;
-                    if (!wordIterator.next().contentEquals(fromWords[j])) {
-                        matchFound = true;
+                    if(!startIterator.hasNext()) {
+                        startIterator = wordsList.listIterator(nextElemIndex);
+                        matchFound = false;
+                        break;
+                    }
+                    if (!startIterator.next().contentEquals(fromWords[j])) {
+                        startIterator = wordsList.listIterator(nextElemIndex);
+                        matchFound = false;
                         break;
                     }
                 }
             }
         }
-        return matchFound;
+
+        if(matchFound) return nextElemIndex - 1;
+        return wordsList.size();
     }
 
     private void replaceMoreWordsInArray(String[] fromWords, String[] toWords) {
@@ -144,6 +155,45 @@ public class TheHistory {
         } while (idx <= wordsArray.length - fromWords.length);
     }
 
+    private void replaceMoreWordsInList(List<String> wordsList, String[] fromWords, String[] toWords) {
+        ListIterator<String> startIt;
+        ListIterator<String> endIt = wordsList.listIterator();
+
+        int nextStartIdx = 0;
+        while(nextStartIdx < wordsList.size()) {
+            nextStartIdx = findNextMatch(wordsList, endIt, fromWords);
+            if(nextStartIdx < wordsList.size()) {
+                endIt = wordsList.listIterator(nextStartIdx + fromWords.length);
+                startIt = wordsList.listIterator(nextStartIdx);
+
+                // copy the first part (expecting at least one element in both fromWords and toWords)
+                int copyLen = Math.min(fromWords.length, toWords.length);
+                for (int i = 0; i < copyLen; ++i) {
+                    if (startIt.hasNext()) startIt.next();
+                    startIt.set(toWords[i]);
+                }
+                // addition
+                if (fromWords.length < toWords.length) {
+                    int startIdx = startIt.previousIndex() + 1;
+                    for (int i = copyLen; i < toWords.length; ++i) {
+                        wordsList.add(startIdx + i - copyLen, toWords[i]);
+                    }
+                    endIt = wordsList.listIterator(startIdx + toWords.length - copyLen);
+                    continue;
+                }
+            }
+
+            // if we just change words (no addition/deletion) exit now
+            // addition or deletion is coming!
+            // insert the rest of the toWords into the output array if there are any
+            // and copy the rest unmodified part of the array
+            // copy the output array back to the wordsArray
+            // step with idx to avoid infinite loops when changing for ex.: 'Il' to 'New Il'
+
+        }
+
+    }
+
     private int findNextMatch(String[] words, int startIndex, String[] searchWords) {
         int idx = startIndex;
         while (idx <= words.length - searchWords.length) {
@@ -169,67 +219,12 @@ public class TheHistory {
             case Array:
                 replaceMoreWordsInArray(fromWords, toWords);
             break;
-
-
-/*
-WORKING!!
-            case Array: {
-                int idx = 0;
-                while (idx <= wordsArray.length - fromWords.length) {
-                    if (wordsArray[idx].contentEquals(fromWords[0])) {
-                        boolean replaceWords = true;
-                        int currentIdx = idx + 1;
-                        for (int j = 1; j < fromWords.length; ++j) {
-                            if (!wordsArray[currentIdx].contentEquals(fromWords[j])) {
-                                replaceWords = false;
-                                break;
-                            }
-                            ++currentIdx;
-                        }
-                        if (replaceWords) {
-                            int replIdx = 0;
-                            //from: 1 to: 3
-                            if(fromWords.length <= toWords.length) {
-                                System.arraycopy(toWords, 0, wordsArray, idx, fromWords.length);
-                                replIdx = fromWords.length;
-                            }
-                            //replIdx: 1, to: 3
-                            if(replIdx < toWords.length) {
-                                String[] tempArray = new String[wordsArray.length + (toWords.length - fromWords.length)];
-                                System.arraycopy(wordsArray, 0, tempArray, 0, idx + replIdx);
-                                int start = idx + replIdx;
-                                if(toWords.length > fromWords.length) {
-                                    for (int i = start; i < start + toWords.length - fromWords.length; ++i) {
-                                        tempArray[i] = toWords[i - start + replIdx];
-                                    }
-                                    replIdx = toWords.length;
-                                    int s = idx + fromWords.length;
-                                    int len = wordsArray.length - s;
-                                    System.arraycopy(wordsArray, s, tempArray, idx + toWords.length, len);
-                                }else{ //from: 2 to: 1
-                                    for (int i = start; i < start + toWords.length; ++i) {
-                                        tempArray[i] = toWords[i - start + replIdx];
-                                    }
-                                    int s = idx + fromWords.length;
-                                    int len = wordsArray.length - s;
-                                    System.arraycopy(wordsArray, s, tempArray, idx + toWords.length, len);
-                                }
-                                wordsArray = tempArray;
-                            }
-
-                            idx += toWords.length - 1; // -1 because ++idx runs every time
-                        }
-                    }
-                    ++idx;
-                }
-            }   // TODO - use wordsArray
-            break;
-*/
-
             case ArrayList:
+                replaceMoreWordsInList(wordsArrayList, fromWords, toWords);
                 // TODO - use wordsArrayList
                 break;
             case LinkedList:
+                replaceMoreWordsInList(wordsLinkedList, fromWords, toWords);
                 // TODO - use wordsLinkedList
                 break;
         }
