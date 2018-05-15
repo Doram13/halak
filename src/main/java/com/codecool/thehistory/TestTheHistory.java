@@ -31,77 +31,68 @@ public class TestTheHistory {
         return sb.toString();
     }
 
+    private static String runFunctionalityTest(TheHistory theHistory, String sourceText, String fromWords, String toWords) {
+        theHistory.add(sourceText);
+        theHistory.replace(fromWords, toWords);
+        String result = theHistory.toString();
+        theHistory.clear();
+        return result;
+    }
+
     public static void runAllFunctionalityTests(TheHistory theHistory) {
-        theHistory.add("replace replace me replace me me me replace me me");
-        theHistory.replace("replace me", "HAPPY FUN");
-        if(!"replace HAPPY FUN HAPPY FUN me me HAPPY FUN me".equals(theHistory.toString())) {
+        String sourceText = "replace replace me replace me me me replace me me";
+        String result;
+
+        result = runFunctionalityTest(theHistory, sourceText, "replace me", "HAPPY FUN");
+        if(!"replace HAPPY FUN HAPPY FUN me me HAPPY FUN me".equals(result)) {
             System.out.println("replace IS NOT WORKING AS EXPECTED!");
         }
-        theHistory.clear();
 
-        theHistory.add("replace replace me replace me me me replace me me");
-        theHistory.replace("replace", "REPLACE");
-        if(!"REPLACE REPLACE me REPLACE me me me REPLACE me me".equals(theHistory.toString())) {
+        result = runFunctionalityTest(theHistory, sourceText, "replace", "REPLACE");
+        if(!"REPLACE REPLACE me REPLACE me me me REPLACE me me".equals(result)) {
             System.out.println("replace IS NOT WORKING AS EXPECTED!");
         }
-        theHistory.clear();
 
-        theHistory.add("replace replace me replace me me me replace me me");
-        theHistory.replace("me", "HAPPY FUN");
-        if(!"replace replace HAPPY FUN replace HAPPY FUN HAPPY FUN HAPPY FUN replace HAPPY FUN HAPPY FUN".equals(theHistory.toString())) {
+        result = runFunctionalityTest(theHistory, sourceText, "me", "HAPPY FUN");
+        if(!"replace replace HAPPY FUN replace HAPPY FUN HAPPY FUN HAPPY FUN replace HAPPY FUN HAPPY FUN".equals(result)) {
             System.out.println("replace IS NOT WORKING AS EXPECTED!");
         }
-        theHistory.clear();
 
-        theHistory.add("replace replace me replace me me me replace me me");
-        theHistory.replace("me me", "SUPER HAPPY FUN");
-        if(!"replace replace me replace SUPER HAPPY FUN me replace SUPER HAPPY FUN".equals(theHistory.toString())) {
+        result = runFunctionalityTest(theHistory, sourceText, "me me", "SUPER HAPPY FUN");
+        if(!"replace replace me replace SUPER HAPPY FUN me replace SUPER HAPPY FUN".equals(result)) {
             System.out.println("replace IS NOT WORKING AS EXPECTED!");
         }
-        theHistory.clear();
 
-        theHistory.add("replace replace me replace me me me replace me me");
-        theHistory.replace("me", "SUPER me FUN");
+        result = runFunctionalityTest(theHistory, sourceText, "me", "SUPER me FUN");
         if(!"replace replace SUPER me FUN replace SUPER me FUN SUPER me FUN SUPER me FUN replace SUPER me FUN SUPER me FUN"
-                .equals(theHistory.toString())) {
+                .equals(result)) {
             System.out.println("replace IS NOT WORKING AS EXPECTED!");
         }
-        theHistory.clear();
 
-        theHistory.add("replace replace me replace me me me replace me me");
-        theHistory.replace("me replace me", "AWE SUPER HAPPY FUN");
-        if(!"replace replace AWE SUPER HAPPY FUN me AWE SUPER HAPPY FUN me".equals(theHistory.toString())) {
+        result = runFunctionalityTest(theHistory, sourceText, "me replace me", "AWE SUPER HAPPY FUN");
+        if(!"replace replace AWE SUPER HAPPY FUN me AWE SUPER HAPPY FUN me".equals(result)) {
             System.out.println("replace IS NOT WORKING AS EXPECTED!");
         }
-        theHistory.clear();
 
-        theHistory.add("replace replace me replace me me me replace me me");
-        theHistory.replace("replace replace me replace me me me replace me me", "replace replace me replace me me me replace me me");
-        if(!"replace replace me replace me me me replace me me".equals(theHistory.toString())) {
+        result = runFunctionalityTest(theHistory, sourceText, sourceText, sourceText);
+        if(!sourceText.equals(result)) {
             System.out.println("replace IS NOT WORKING AS EXPECTED!");
         }
-        theHistory.clear();
 
-        theHistory.add("replace replace me replace me me me replace me me");
-        theHistory.replace("me me me", "REPLACE");
-        if(!"replace replace me replace REPLACE replace me me".equals(theHistory.toString())) {
+        result = runFunctionalityTest(theHistory, sourceText, "me me me", "REPLACE");
+        if(!"replace replace me replace REPLACE replace me me".equals(result)) {
             System.out.println("replace IS NOT WORKING AS EXPECTED!");
         }
-        theHistory.clear();
 
-        theHistory.add("replace replace me replace me me me replace me me");
-        theHistory.replace("replace replace", "REPLACE");
-        if(!"REPLACE me replace me me me replace me me".equals(theHistory.toString())) {
+        result = runFunctionalityTest(theHistory, sourceText, "replace replace", "REPLACE");
+        if(!"REPLACE me replace me me me replace me me".equals(result)) {
             System.out.println("replace IS NOT WORKING AS EXPECTED!");
         }
-        theHistory.clear();
 
-        theHistory.add("replace replace me replace me me me replace me me");
-        theHistory.replace("replace replace me replace me me me replace me me", "REPLACE");
-        if(!"REPLACE".equals(theHistory.toString())) {
+        result = runFunctionalityTest(theHistory, sourceText, sourceText, "REPLACE");
+        if(!"REPLACE".equals(result)) {
             System.out.println("replace IS NOT WORKING AS EXPECTED!");
         }
-        theHistory.clear();
     }
 
     public static void runAllTests(TheHistory theHistory) {
