@@ -89,7 +89,7 @@ public class TheHistory {
         }
     }
 
-    private int findNextMatch(List<String> wordsList, ListIterator<String> startIterator, String[] fromWords) {
+    private int findNextMatch(LinkedList<String> wordsList, ListIterator<String> startIterator, String[] fromWords) {
         boolean matchFound = false;
         int nextElemIndex = 0;
 
@@ -99,20 +99,34 @@ public class TheHistory {
                 matchFound = true;
                 for (int j = 1; j < fromWords.length; ++j) {
                     if(!startIterator.hasNext()) {
-                        startIterator = wordsList.listIterator(nextElemIndex);
+//                        currentIterator = wordsList.listIterator(nextElemIndex);
                         matchFound = false;
                         break;
                     }
                     if (!startIterator.next().contentEquals(fromWords[j])) {
-                        startIterator = wordsList.listIterator(nextElemIndex);
+//                        currentIterator = wordsList.listIterator(nextElemIndex);
+                        int q = j;
+                        while(q > 0){
+                            startIterator.previous();
+
+                            --q;
+                        }
                         matchFound = false;
                         break;
                     }
                 }
             }
+            //if(!matchFound && startIterator.hasNext()) startIterator.next();
         }
 
-        if(matchFound) return nextElemIndex - 1;
+        if(matchFound){
+            int s = fromWords.length;
+            while (s > 0) {
+                startIterator.previous();
+                --s;
+            }
+            return nextElemIndex - 1;
+        }
         return wordsList.size();
     }
 
@@ -155,30 +169,41 @@ public class TheHistory {
         } while (idx <= wordsArray.length - fromWords.length);
     }
 
-    private void replaceMoreWordsInList(List<String> wordsList, String[] fromWords, String[] toWords) {
-        ListIterator<String> startIt;
-        ListIterator<String> endIt = wordsList.listIterator();
+    private void replaceMoreWordsInLinkedList(LinkedList<String> wordsList, String[] fromWords, String[] toWords) {
+        ListIterator<String> startIt = wordsList.listIterator();
+        //ListIterator<String> endIt = wordsList.listIterator();
 
         int nextStartIdx = 0;
         while(nextStartIdx < wordsList.size()) {
-            nextStartIdx = findNextMatch(wordsList, endIt, fromWords);
+            nextStartIdx = findNextMatch(wordsList, startIt, fromWords);
             if(nextStartIdx < wordsList.size()) {
-                endIt = wordsList.listIterator(nextStartIdx + fromWords.length);
-                startIt = wordsList.listIterator(nextStartIdx);
+                //endIt = wordsList.listIterator(nextStartIdx + fromWords.length);
+                //startIt = wordsList.listIterator(nextStartIdx);
 
                 // copy the first part (expecting at least one element in both fromWords and toWords)
                 int copyLen = Math.min(fromWords.length, toWords.length);
+
+                // for later if addition is needed
+                //int startIdx = endIt.nextIndex();//startIt.previousIndex() + 1;
+
                 for (int i = 0; i < copyLen; ++i) {
                     if (startIt.hasNext()) startIt.next();
                     startIt.set(toWords[i]);
                 }
+
+                /*
+                for (int i = 0; i < copyLen; ++i) {
+                    if (startIt.hasNext()) startIt.next();
+                    startIt.set(toWords[i]);
+                }
+               */
                 // addition
                 if (fromWords.length < toWords.length) {
-                    int startIdx = startIt.previousIndex() + 1;
                     for (int i = copyLen; i < toWords.length; ++i) {
-                        wordsList.add(startIdx + i - copyLen, toWords[i]);
+                        startIt.add(toWords[i]);
+//                        wordsList.add(startIdx + i - copyLen, toWords[i]);
                     }
-                    endIt = wordsList.listIterator(startIdx + toWords.length - copyLen);
+//                    endIt = wordsList.listIterator(startIdx + toWords.length - copyLen);
                     continue;
                 }
             }
@@ -220,11 +245,11 @@ public class TheHistory {
                 replaceMoreWordsInArray(fromWords, toWords);
             break;
             case ArrayList:
-                replaceMoreWordsInList(wordsArrayList, fromWords, toWords);
+//                replaceMoreWordsInList(wordsArrayList, fromWords, toWords);
                 // TODO - use wordsArrayList
                 break;
             case LinkedList:
-                replaceMoreWordsInList(wordsLinkedList, fromWords, toWords);
+                replaceMoreWordsInLinkedList((LinkedList<String>) wordsLinkedList, fromWords, toWords);
                 // TODO - use wordsLinkedList
                 break;
         }
