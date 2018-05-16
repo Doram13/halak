@@ -295,13 +295,6 @@ public class TheHistory {
         return idx;
     }
 
-    private void replaceElements(List<String> sourceArrayList, List<String> destArrayList, int startDestIdx, int num) {
-        for(int i = 0; i < num; ++i) {
-            destArrayList.set(startDestIdx + i, sourceArrayList.get(i));
-        }
-
-    }
-
     private void replaceMoreWordsInArrayList(ArrayList<String> wordsList, String[] fromWords, String[] toWords) {
         int idx = 0;
         do {
@@ -309,7 +302,11 @@ public class TheHistory {
             if (idx <= wordsList.size() - fromWords.length) {
                 // copy the first part (expecting at least one element in both fromWords and toWords)
                 int copyLen = Math.min(fromWords.length, toWords.length);
-                replaceElements(Arrays.asList(toWords), wordsList, idx, copyLen);
+                // replace elements
+                for(int i = 0; i < copyLen; ++i) {
+                    wordsList.set(idx + i, toWords[i]);
+                }
+
                 if (fromWords.length != toWords.length) {
                     if (fromWords.length < toWords.length) {
                         // addition
@@ -332,20 +329,15 @@ public class TheHistory {
     }
 
     private void replaceMoreWords(String[] fromWords, String[] toWords) {
-        //List<String> a = Arrays.asList(wordsArray);
-        //a.set(0, "");
-
         switch (dataStructureType) {
             case Array:
                 replaceMoreWordsInArray(fromWords, toWords);
                 break;
             case ArrayList:
                 replaceMoreWordsInArrayList((ArrayList<String>)wordsArrayList, fromWords, toWords);
-                // TODO - use wordsArrayList
                 break;
             case LinkedList:
                 replaceMoreWordsInLinkedList((LinkedList<String>) wordsLinkedList, fromWords, toWords);
-                // TODO - use wordsLinkedList
                 break;
         }
     }
