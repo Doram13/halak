@@ -206,6 +206,15 @@ public class TheHistory {
 //                    endIt = wordsList.listIterator(startIdx + toWords.length - copyLen);
                     continue;
                 }
+                // deletion
+                if (fromWords.length > toWords.length) {
+                    for (int i = copyLen; i < fromWords.length; ++i) {
+                        startIt.next(); // delete the element after what we just replaced from toWords
+                        startIt.remove();
+                    }
+                    continue;
+
+                }
             }
 
             // if we just change words (no addition/deletion) exit now
