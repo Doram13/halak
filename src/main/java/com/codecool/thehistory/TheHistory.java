@@ -89,47 +89,6 @@ public class TheHistory {
         }
     }
 
-    private int findNextMatch(LinkedList<String> wordsList, ListIterator<String> startIterator, String[] fromWords) {
-        boolean matchFound = false;
-        int nextElemIndex = 0;
-
-        while(!matchFound && startIterator.hasNext()) {
-            if (startIterator.next().contentEquals(fromWords[0])) {
-                nextElemIndex = startIterator.nextIndex();
-                matchFound = true;
-                for (int j = 1; j < fromWords.length; ++j) {
-                    if(!startIterator.hasNext()) {
-//                        currentIterator = wordsList.listIterator(nextElemIndex);
-                        matchFound = false;
-                        break;
-                    }
-                    if (!startIterator.next().contentEquals(fromWords[j])) {
-//                        currentIterator = wordsList.listIterator(nextElemIndex);
-                        int q = j;
-                        while(q > 0){
-                            startIterator.previous();
-
-                            --q;
-                        }
-                        matchFound = false;
-                        break;
-                    }
-                }
-            }
-            //if(!matchFound && startIterator.hasNext()) startIterator.next();
-        }
-
-        if(matchFound){
-            int s = fromWords.length;
-            while (s > 0) {
-                startIterator.previous();
-                --s;
-            }
-            return nextElemIndex - 1;
-        }
-        return wordsList.size();
-    }
-
     private void replaceMoreWordsInArray(String[] fromWords, String[] toWords) {
         int idx = 0;
         do {
@@ -169,41 +128,62 @@ public class TheHistory {
         } while (idx <= wordsArray.length - fromWords.length);
     }
 
+    private void stepIteratorBack(ListIterator<String> it, int numOfSteps) {
+        if (numOfSteps > 0) {
+            while (numOfSteps > 0 && it.hasPrevious()) {
+                it.previous();
+                --numOfSteps;
+            }
+        }
+    }
+
+    private void findNextMatch(LinkedList<String> wordsList, ListIterator<String> startIterator, String[] fromWords) {
+        boolean matchFound = false;
+
+        while(!matchFound && startIterator.hasNext()) {
+            if (startIterator.next().contentEquals(fromWords[0])) {
+                matchFound = true;
+                for (int j = 1; j < fromWords.length; ++j) {
+                    if(!startIterator.hasNext()) {
+                        matchFound = false;
+                        break;
+                    }
+                    if (!startIterator.next().contentEquals(fromWords[j])) {
+                        // go back one index after the first matching string to not miss possible matching
+                        stepIteratorBack(startIterator, j);
+                        matchFound = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(matchFound){
+            // go back to the start of the match
+            stepIteratorBack(startIterator, fromWords.length);
+        }
+    }
+
     private void replaceMoreWordsInLinkedList(LinkedList<String> wordsList, String[] fromWords, String[] toWords) {
         ListIterator<String> startIt = wordsList.listIterator();
-        //ListIterator<String> endIt = wordsList.listIterator();
 
-        int nextStartIdx = 0;
-        while(nextStartIdx < wordsList.size()) {
-            nextStartIdx = findNextMatch(wordsList, startIt, fromWords);
-            if(nextStartIdx < wordsList.size()) {
-                //endIt = wordsList.listIterator(nextStartIdx + fromWords.length);
-                //startIt = wordsList.listIterator(nextStartIdx);
+        while(startIt.nextIndex() < wordsList.size()) {
+            findNextMatch(wordsList, startIt, fromWords);
+            if(startIt.nextIndex() < wordsList.size()) {
 
                 // copy the first part (expecting at least one element in both fromWords and toWords)
                 int copyLen = Math.min(fromWords.length, toWords.length);
 
-                // for later if addition is needed
-                //int startIdx = endIt.nextIndex();//startIt.previousIndex() + 1;
-
                 for (int i = 0; i < copyLen; ++i) {
                     if (startIt.hasNext()) startIt.next();
                     startIt.set(toWords[i]);
                 }
 
-                /*
-                for (int i = 0; i < copyLen; ++i) {
-                    if (startIt.hasNext()) startIt.next();
-                    startIt.set(toWords[i]);
-                }
-               */
                 // addition
                 if (fromWords.length < toWords.length) {
                     for (int i = copyLen; i < toWords.length; ++i) {
                         startIt.add(toWords[i]);
-//                        wordsList.add(startIdx + i - copyLen, toWords[i]);
                     }
-//                    endIt = wordsList.listIterator(startIdx + toWords.length - copyLen);
                     continue;
                 }
                 // deletion
@@ -216,14 +196,6 @@ public class TheHistory {
 
                 }
             }
-
-            // if we just change words (no addition/deletion) exit now
-            // addition or deletion is coming!
-            // insert the rest of the toWords into the output array if there are any
-            // and copy the rest unmodified part of the array
-            // copy the output array back to the wordsArray
-            // step with idx to avoid infinite loops when changing for ex.: 'Il' to 'New Il'
-
         }
 
     }
