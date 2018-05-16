@@ -1,7 +1,5 @@
 package com.codecool.thehistory;
 
-import org.omg.CORBA.DynAnyPackage.InvalidValue;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -159,32 +157,19 @@ public class TestTheHistory {
     }
 
     public static void main(String[] args) {
-        TheHistory theHistory = new TheHistory();
-
         System.out.println("****** Functionality Tests - Array *******");
-        theHistory.setDataStructureType(DataStructureType.Array);
-        runAllFunctionalityTests(theHistory);
-
+        runAllFunctionalityTests(new TheHistoryArray());
         System.out.println("****** Functionality Tests - ArrayList *******");
-        theHistory.setDataStructureType(DataStructureType.ArrayList);
-        runAllFunctionalityTests(theHistory);
-
+        runAllFunctionalityTests(new TheHistoryArrayList());
         System.out.println("****** Functionality Tests - LinkedList *******");
-        theHistory.setDataStructureType(DataStructureType.LinkedList);
-        runAllFunctionalityTests(theHistory);
+        runAllFunctionalityTests(new TheHistoryLinkedList());
 
         System.out.println("****** Array Tests *******");
-        theHistory.setDataStructureType(DataStructureType.Array);
-        runAllTests(theHistory);
-
-        System.out.println("****** LinkedList Tests *******");
-        theHistory.setDataStructureType(DataStructureType.LinkedList);
-        runAllTests(theHistory);
-
+        runAllTests(new TheHistoryArray());
         System.out.println("****** ArrayList Tests *******");
-        theHistory.setDataStructureType(DataStructureType.ArrayList);
-        runAllTests(theHistory);
-//        System.out.println(theHistory);
+        runAllTests(new TheHistoryArrayList());
+        System.out.println("****** LinkedList Tests *******");
+        runAllTests(new TheHistoryLinkedList());
     }
 
 }
