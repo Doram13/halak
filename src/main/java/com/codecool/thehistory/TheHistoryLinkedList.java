@@ -79,6 +79,7 @@ public class TheHistoryLinkedList implements TheHistory {
         } while (startIt.nextIndex() < wordsLinkedList.size());
 
     }
+
     private void stepIteratorBack(ListIterator<String> it, int numOfSteps) {
         if (numOfSteps > 0) {
             while (numOfSteps > 0 && it.hasPrevious()) {
@@ -119,9 +120,9 @@ public class TheHistoryLinkedList implements TheHistory {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-                for (String word : wordsLinkedList) {
-                    sb.append(word).append(" ");
-                }
+        for (String word : wordsLinkedList) {
+            sb.append(word).append(" ");
+        }
         sb.deleteCharAt(sb.length() - 1); // last space char
         return sb.toString();
     }
