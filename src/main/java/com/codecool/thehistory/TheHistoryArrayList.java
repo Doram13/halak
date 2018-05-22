@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class TheHistoryArrayList implements TheHistory {
+    /**
+     * This implementation should use a String ArrayList so don't change that!
+     */
     private List<String> wordsArrayList = new ArrayList<>();
 
     @Override

@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 public class TheHistoryArray implements TheHistory {
 
+    /**
+     * This implementation should use a String array so don't change that!
+     */
     private String[] wordsArray = new String[0];
 
     @Override

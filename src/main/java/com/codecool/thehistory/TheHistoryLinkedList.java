@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class TheHistoryLinkedList implements TheHistory {
+    /**
+     * This implementation should use a String LinkedList so don't change that!
+     */
     private List<String> wordsLinkedList = new LinkedList<>();
 
     @Override
