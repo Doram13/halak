@@ -56,7 +56,7 @@ public class TheHistoryArrayList implements TheHistory {
                 // copy the first part (expecting at least one element in both fromWords and toWords)
                 int copyLen = Math.min(fromWords.length, toWords.length);
                 // replace elements
-                for(int i = 0; i < copyLen; ++i) {
+                for (int i = 0; i < copyLen; ++i) {
                     wordsArrayList.set(idx + i, toWords[i]);
                 }
 
@@ -101,10 +101,10 @@ public class TheHistoryArrayList implements TheHistory {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-                for (String word : wordsArrayList) {
-                    sb.append(word).append(" ");
-                }
-        sb.deleteCharAt(sb.length() - 1); // last space char
+        for (String word : wordsArrayList) {
+            sb.append(word).append(" ");
+        }
+        if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1); // last space char
         return sb.toString();
     }
 

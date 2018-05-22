@@ -126,7 +126,7 @@ public class TheHistoryLinkedList implements TheHistory {
         for (String word : wordsLinkedList) {
             sb.append(word).append(" ");
         }
-        sb.deleteCharAt(sb.length() - 1); // last space char
+        if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1); // last space char
         return sb.toString();
     }
 

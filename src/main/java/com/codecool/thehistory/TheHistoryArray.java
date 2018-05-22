@@ -90,7 +90,7 @@ public class TheHistoryArray implements TheHistory {
         for (String word : wordsArray) {
             sb.append(word).append(" ");
         }
-        sb.deleteCharAt(sb.length() - 1); // last space char
+        if (sb.length() > 0) sb.deleteCharAt(sb.length() - 1); // last space char
         return sb.toString();
     }
 
