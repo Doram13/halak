@@ -19,14 +19,15 @@ package com.codecool.thehistory;
 
 public interface TheHistory {
     /**
-     * Adds the 'text' to the container of the implementing class which stores all the text
+     * Splits the incoming text to words and adds the words to the container of the
+     * implementing class
      *
      * @param text: a string containing words separated with spaces
      */
     void add(String text);
 
     /**
-     * Remove all occurrences of a word from the stored text
+     * Removes all occurrences of a word from the stored data
      *
      * @param wordToBeRemoved: only one word. No spaces just the word otherwise it won't remove anything
      */

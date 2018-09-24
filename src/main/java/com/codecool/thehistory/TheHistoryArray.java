@@ -2,6 +2,17 @@ package com.codecool.thehistory;
 
 import java.util.Arrays;
 
+
+/*
+ *
+ * READ THIS FIRST AFTER THE TestTheHistory.java!
+ *
+ *
+ * An implementation based on the plain old static array. This implementation is not optimized, it shows the naive
+ * implementation where a new array is reserved every time when we need to resize the array (as you know the static
+ * array is static because it can't be resized and you need to reserve an other array with the new size and copy
+ * all the content there).
+ */
 public class TheHistoryArray implements TheHistory {
 
     /**
@@ -11,16 +22,18 @@ public class TheHistoryArray implements TheHistory {
 
     @Override
     public void add(String text) {
-        int origLength = wordsArray.length;
-        String[] newArray = text.split("\\s+");
-        wordsArray = Arrays.copyOf(wordsArray, origLength + newArray.length);
-        System.arraycopy(newArray, 0, wordsArray, origLength, newArray.length);
+        // splitting with a regexp is small amount of code but it's always a good idea to check it's performance
+        wordsArray = text.split("\\s+");
     }
 
     @Override
     public void removeWord(String wordToBeRemoved) {
         for (int i = 0; i < wordsArray.length; ++i) {
             if (wordsArray[i].contentEquals(wordToBeRemoved)) {
+                // naive solution: reserve a smaller temporary array and copy the content over from the original
+                // Reserving and copying is slow. A better solution could be to make the temp array outside of the
+                // for loop and copy the unmodified and not already copied parts only when a match has been found.
+                // It will be faster most of the time.
                 String[] destArray = new String[wordsArray.length - 1];
                 System.arraycopy(wordsArray, 0, destArray, 0, i);
                 System.arraycopy(wordsArray, i + 1, destArray, i, destArray.length - i);
@@ -52,15 +65,27 @@ public class TheHistoryArray implements TheHistory {
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
         int idx = 0;
         do {
+            // find the next matching pattern
             idx = findNextMatch(wordsArray, idx, fromWords);
+
+            // if idx is bigger than wordsArray's length minus the number of words in the fromWords that means
+            // there is no room for another match -> we've finished
             if (idx <= wordsArray.length - fromWords.length) {
-                // copy the first part (expecting at least one element in both fromWords and toWords)
+                // Expecting at least one element in both fromWords and toWords.
+                // We use copyLen to replace the words instead of remove/insert to speed up the code
                 int copyLen = Math.min(fromWords.length, toWords.length);
+                // replace the words in the wordsArray
                 System.arraycopy(toWords, 0, wordsArray, idx, copyLen);
 
+                // if fromWords length is the same as toWords length, we already replaced all the words
+                // with the previous arraycopy
                 if (fromWords.length != toWords.length) {
-                    // addition or deletion is coming, create a temporary array with the proper size and move unchanged data into it
+                    // create a temporary array with the proper size and move unchanged data into it
+                    // It's not the best idea to make a temp array and do the changes every time we have a match.
+                    // One improvement idea is to not make the temp array here but store only some information which
+                    // needed to do the changes after we found every match
                     String[] tempArray = new String[wordsArray.length + (toWords.length - fromWords.length)];
+                    // copy the unchanged + already replaced part to the temp array
                     System.arraycopy(wordsArray, 0, tempArray, 0, idx + copyLen);
 
                     // insert the rest of the toWords into the output array if there are any
@@ -68,14 +93,16 @@ public class TheHistoryArray implements TheHistory {
                         System.arraycopy(toWords, copyLen, tempArray, idx + copyLen, toWords.length - copyLen);
                     }
 
-                    // and copy the rest unmodified part of the array (have you noticed we don't need to take care of deletion?)
+                    // and copy the rest unmodified part of the array
                     System.arraycopy(wordsArray, idx + fromWords.length, tempArray, idx + toWords.length,
                             wordsArray.length - (idx + fromWords.length));
+
+                    // Have you noticed we don't need to take care of deletion?
 
                     // copy the output array back to the wordsArray
                     wordsArray = tempArray;
 
-                    // step with idx to avoid infinite loops when changing for ex.: 'Il' to 'New Il'
+                    // step idx to avoid infinite loops when changing for ex.: 'Il' to 'New Il'
                     idx += toWords.length - 1;
                 }
             }
@@ -94,20 +121,30 @@ public class TheHistoryArray implements TheHistory {
         return sb.toString();
     }
 
+    /**
+     * Find the next match or if not found return a too big index
+     * @param words words storage array
+     * @param startIndex on which index to start the searching
+     * @param fromWords what we are searching for
+     * @return index to the start of the next match or an invalid index
+     */
     private int findNextMatch(String[] words, int startIndex, String[] fromWords) {
         int idx = startIndex;
         while (idx <= words.length - fromWords.length) {
+            // if the first word matches, start an inner loop
             if (words[idx].contentEquals(fromWords[0])) {
                 int currentIdx = idx + 1;
-                int charIdx = 1;
-                while (charIdx < fromWords.length && words[currentIdx].contentEquals(fromWords[charIdx])) {
+                int wordIdx = 1;
+                while (wordIdx < fromWords.length && words[currentIdx].contentEquals(fromWords[wordIdx])) {
                     ++currentIdx;
-                    ++charIdx;
+                    ++wordIdx;
                 }
-                if (charIdx == fromWords.length) break;
+                // if all the words are matching, break the outer loop and return with the index
+                if (wordIdx == fromWords.length) break;
             }
             ++idx;
         }
         return idx;
     }
 }
+
