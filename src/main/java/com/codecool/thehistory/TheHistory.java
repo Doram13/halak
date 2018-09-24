@@ -1,5 +1,22 @@
 package com.codecool.thehistory;
 
+/*
+ *
+ * START THE ASSIGNMENT BY READING/UNDERSTANDING THIS FILE!
+ *
+ *
+ * If we want to implement functionalities which share common features with different implementation we can use
+ * an interface. An interface is a specialized class which only has the public access modifier, the attributes inside
+ * are final static by definition and the methods can't have a definition but only a declaration (except the
+ * default methods, check out replace() ).
+ * If a class implements an interface it should define all the definitions for the methods (except if
+ * it's an abstract class).
+ *
+ * Why is it good? Because if a class implements an interface we can use polymorphism to access the class' instance
+ * through any of the interface it implements. That's what we are using in the TestTheHistory.java to avoid duplicate
+ * test case implementations.
+ */
+
 public interface TheHistory {
     /**
      * Adds the 'text' to the container of the implementing class which stores all the text

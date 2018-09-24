@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /*
+ * READ THIS AFTER TheHistory.java!
+ *
+ *
  * DO NOT CHANGE THE TESTS (please)!
  * You may put extra logs to be able to differentiate which test case fails and/or simply comment out parts
  * which are not implemented yet if the output is hard to read but make sure you restore everything and run
