@@ -8,9 +8,9 @@ package com.codecool.thehistory;
  * If we want to implement functionalities which share common features with different implementations we can use
  * an interface.
  * An interface is a Java type. It is like a specialized class: mostly with instance method declarations, without
- * implementation (this rule is extended with all Java versions, so please check the actual documentation about
- * potential elements of an interface)
- * If a concrete (not abstract) class implements an interface it should implement all methods inherited.
+ * implementation (in Java 8 default methods has implementation /check out replace()/ and there are changes in
+ * newer Java versions as well).
+ * If a concrete (not abstract) class implements an interface it should implement all it's methods.
  *
  * Why is it good? Because if a class implements an interface we can use polymorphism to access the class' instance
  * through any of the interface it implements. That's what we are using in the TestTheHistory.java to avoid duplicate

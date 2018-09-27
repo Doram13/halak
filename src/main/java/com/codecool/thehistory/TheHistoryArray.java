@@ -1,8 +1,5 @@
 package com.codecool.thehistory;
 
-import java.util.Arrays;
-
-
 /*
  *
  * READ THIS FIRST AFTER THE TestTheHistory.java!
@@ -122,7 +119,7 @@ public class TheHistoryArray implements TheHistory {
     }
 
     /**
-     * Find the next match or if not found return a too big index
+     * Find the next match or if not found return a 'too big' index
      * @param words words storage array
      * @param startIndex on which index to start the searching
      * @param fromWords what we are searching for
@@ -134,7 +131,7 @@ public class TheHistoryArray implements TheHistory {
             // if the first word matches, start an inner loop
             if (words[idx].contentEquals(fromWords[0])) {
                 int currentIdx = idx + 1;
-                int wordIdx = 1;
+                int wordIdx = 1; // to get the next word from fromWords
                 while (wordIdx < fromWords.length && words[currentIdx].contentEquals(fromWords[wordIdx])) {
                     ++currentIdx;
                     ++wordIdx;
