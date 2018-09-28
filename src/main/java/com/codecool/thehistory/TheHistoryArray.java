@@ -2,7 +2,7 @@ package com.codecool.thehistory;
 
 /*
  *
- * READ THIS FIRST AFTER THE TestTheHistory.java!
+ * READ THIS AFTER THE TestTheHistory.java!
  *
  *
  * An implementation based on the plain old static array. This implementation is not optimized, it shows the naive
