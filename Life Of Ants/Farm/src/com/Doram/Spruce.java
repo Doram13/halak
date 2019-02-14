@@ -7,6 +7,8 @@ public class Spruce extends EverGreen implements SpecialAttributes{
     private int production;
     String name;
     int monthsOld;
+    int defaultProductionIncrementation;
+
 
     Spruce() {
         super();
@@ -31,6 +33,11 @@ public class Spruce extends EverGreen implements SpecialAttributes{
         production -= 20;
         if (production < 0 ) {production = 0;}
         System.out.println(name + " is rotting, reducing the production by 20. Current production is: " + this.production);
+    }
+
+    @Override
+     void incrementProductionByDefault() {
+        production += defaultProductionIncrementation;
     }
 
     @Override

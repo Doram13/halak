@@ -6,8 +6,10 @@ public class Almond extends Plant implements SpecialAttributes{
     private int plantCounter = 0;
     private int production;
     String name;
+    private int defaultProductionIncrementation;
 
     Almond() {
+        super();
         production = 50;
         name = "Almond" + plantCounter;
         plantCounter++;
@@ -29,10 +31,15 @@ public class Almond extends Plant implements SpecialAttributes{
     }
 
     @Override
-    public void rot() {
+   public void rot() {
         production -= 18;
         if (production < 0 ) {production = 0;}
         System.out.println(name + " is rotting, reducing the production by 18. Current production is: " + this.production);
+    }
+
+    @Override
+    void incrementProductionByDefault() {
+        production += this.defaultProductionIncrementation;
     }
 
     @Override
@@ -46,7 +53,7 @@ public class Almond extends Plant implements SpecialAttributes{
             rot();
             return 0;
         }
-        this.incrementProductionByDefault();
+        incrementProductionByDefault();
         System.out.println("I'm " + this.name + " I've produced: " + production);
         return produceFood();
     }

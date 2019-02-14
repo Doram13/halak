@@ -5,7 +5,10 @@ public class Juniper extends EverGreen {
     private int production;
     String name;
     int monthsOld;
-   // private int maxProduction;
+    int defaultProductionIncrementation;
+
+
+    // private int maxProduction;
 
     Juniper() {
         super();
@@ -21,11 +24,16 @@ public class Juniper extends EverGreen {
     }
 
     @Override
+     void incrementProductionByDefault() {
+        production += defaultProductionIncrementation;
+        System.out.println(name + "'s production has been incremented by 4, by default.");}
+
+    @Override
     int passOneMonth() {
         if (this.monthsOld % 5 == 0) {
             this.growLeaves();
         }
-        this.incrementProductionByDefault();
+        else incrementProductionByDefault();
         if (production >= this.maxProduction) {
             this.speak();
             production = maxProduction;
